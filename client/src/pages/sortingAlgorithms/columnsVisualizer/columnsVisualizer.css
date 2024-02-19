@@ -1,0 +1,17 @@
+div.columnVisualizer{
+  min-width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  overflow-y: hidden;
+}
+button.sortButton{
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+div.iterationHolder{
+  position: fixed;
+  top: 30px;
+  left: 0;
+}
