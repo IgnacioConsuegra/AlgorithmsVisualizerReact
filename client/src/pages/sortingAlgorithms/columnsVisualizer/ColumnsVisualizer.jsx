@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react';
 import Column from './Column/index.jsx';
 import './columnsVisualizer.css';
 import { burbleSort } from '../algorithm/burbleShort.js';
-
+import { selectionSort } from '../algorithm/selectionSort.js';
 
 //Here we are using two reducers, the first handles our columns/nodes, the second is iteration and time box.
 //The changes that our array will be : 
@@ -76,7 +76,7 @@ const ColumnsVisualizer = () => {
     <div className='columnVisualizer'>
       <button
       className='sortButton'
-      onClick={() => burbleSort(myColumn.arr.normal, dispatch, dispatchIteAndTime)}>Sort.</button>
+      onClick={() => selectionSort(myColumn.arr.normal, dispatch, dispatchIteAndTime)}>Sort.</button>
       <div className='iterationHolder'>
         <p><b>Iteration: {iteAndTime.iteration}</b></p>
         <p><b>Time: {Math.round(iteAndTime.time)} S</b></p>
