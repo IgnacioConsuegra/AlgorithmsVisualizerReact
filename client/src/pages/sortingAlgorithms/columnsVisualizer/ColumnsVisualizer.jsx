@@ -4,19 +4,36 @@ import './columnsVisualizer.css';
 import { burbleSort } from '../algorithm/burbleShort.js';
 
 
-//Here we are using two reducers, the first handles our columns, the second this iteration and time box.
-// ACTIONS: CHANGE AND ADD, are used for handling our columns, and ite: for our iterations. 
+//Here we are using two reducers, the first handles our columns/nodes, the second is iteration and time box.
+//The changes that our array will be : 
+
+//ACTION.ADD_NORMAL : This will fill our empty array with random numbers, northing special.
+
+/*ACTIONS.CHANGE : This will change our array entirely, this will be used for sorting it. 
+
+  This also will be used for to paint green the number that is being compared.
+*/
+
+/*ACTIONS_FINISHED: This will be dispatched after our sort is finished, this will paint green, from left to right our nodes*/
 
 export const ACTIONS = {
   CHANGE : 'change',
-  ADD: 'add',
+  ADD_NORMAL: 'add_normal',
+  ADD_FINISHED: 'add_finished',
   ite: 'ite',
 }
 
-function createColumns() {
+function createColumns(num) {
   const grid = [];
-  for(let i = 0; i < 64; i++) {
+  for(let i = 0; i < num; i++) {
     grid.push(Math.round(Math.random() * 100))
+  }
+  return grid;
+}
+function fillFinished(num) {
+  const grid = [];
+  for(let i = 0; i < num; i++) {
+    grid.push(false)
   }
   return grid;
 }
@@ -24,9 +41,14 @@ function createColumns() {
 function reducer(myColumn, action) {
   switch (action.type) {
     case ACTIONS.CHANGE:
-      return {arr: [...action.payload.arr], next: action.payload.next}
-    case ACTIONS.ADD: 
-      return {arr: [...action.payload.arr], next: 0}
+      return {arr: {normal: [...action.payload.arr.normal], finished:[...myColumn.arr.finished]}, next: action.payload.next}
+
+    case ACTIONS.ADD_NORMAL: 
+      return {arr: {normal: [...action.payload.arr.normal], finished: [...action.payload.arr.finished]}, next: 0}
+
+    case ACTIONS.ADD_FINISHED: 
+      return {arr: {normal: [...myColumn.arr.normal], finished: [...action.payload.arr.finished]}, next : -10}
+
     default:
       break;
   }
@@ -43,29 +65,32 @@ function reducerIteration(iteAndTime, action) {
 
 
 const ColumnsVisualizer = () => {
-  const [myColumn, dispatch] = useReducer(reducer, {arr: [], next: 0});
+  const [myColumn, dispatch] = useReducer(reducer, {arr: {normal: [], finished: []}, next: 0});
   const [iteAndTime, dispatchIteAndTime] = useReducer(reducerIteration, {iteration: 0, time: 0});
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.ADD, payload: {arr: createColumns()}});
+    dispatch({ type: ACTIONS.ADD_NORMAL, payload: {arr: {normal: createColumns(64), finished: fillFinished(64)}}});
   }, [])
 
   return (
     <div className='columnVisualizer'>
       <button
       className='sortButton'
-      onClick={() => burbleSort(myColumn.arr, dispatch, dispatchIteAndTime)}>Sort.</button>
+      onClick={() => burbleSort(myColumn.arr.normal, dispatch, dispatchIteAndTime)}>Sort.</button>
       <div className='iterationHolder'>
         <p><b>Iteration: {iteAndTime.iteration}</b></p>
         <p><b>Time: {Math.round(iteAndTime.time)} S</b></p>
       </div>
     {
-      myColumn.arr.map((element, index) => {
+      myColumn.arr.normal.map((element, index) => {
         return(
           <Column
             key={index}
             number={element}
-            backgroundColor={index === myColumn.next ? 'green' : 'red'}
+            isFalse={myColumn.arr.finished[index]}
+            backgroundColor={
+              index === myColumn.next ? 'green' : 'red'
+            }
           />
         )
       })
