@@ -5,13 +5,9 @@ div.columnVisualizer{
   align-items: flex-end;
   overflow-y: hidden;
 }
-button.sortButton{
-  position: fixed;
-  top: 0;
-  left: 0;
-}
+
 div.iterationHolder{
   position: fixed;
-  top: 30px;
+  top: 50px;
   left: 0;
 }

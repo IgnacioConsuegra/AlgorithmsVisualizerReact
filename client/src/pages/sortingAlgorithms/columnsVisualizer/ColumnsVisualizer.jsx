@@ -1,8 +1,9 @@
 import { useEffect, useReducer } from 'react';
-import Column from './Column/index.jsx';
 import './columnsVisualizer.css';
-import { burbleSort } from '../algorithm/burbleShort.js';
-import { selectionSort } from '../algorithm/selectionSort.js';
+import { NavBar } from '../../../components/NavBar/NavBar.jsx'
+import Column from './Column/index.jsx';
+
+
 
 //Here we are using two reducers, the first handles our columns/nodes, the second is iteration and time box.
 //The changes that our array will be : 
@@ -23,14 +24,14 @@ export const ACTIONS = {
   ite: 'ite',
 }
 
-function createColumns(num) {
+export function createColumns(num) {
   const grid = [];
   for(let i = 0; i < num; i++) {
     grid.push(Math.round(Math.random() * 100))
   }
   return grid;
 }
-function fillFinished(num) {
+export function fillFinished(num) {
   const grid = [];
   for(let i = 0; i < num; i++) {
     grid.push(false)
@@ -74,11 +75,10 @@ const ColumnsVisualizer = () => {
 
   return (
     <div className='columnVisualizer'>
-      <button
-      className='sortButton'
-      onClick={() => selectionSort(myColumn.arr.normal, dispatch, dispatchIteAndTime)}>Sort.</button>
+      <NavBar myColumn={myColumn.arr.normal} dispatch={dispatch} dispatchIteAndTime={dispatchIteAndTime}/>
+      
       <div className='iterationHolder'>
-        <p><b>Iteration: {iteAndTime.iteration}</b></p>
+        <p><b>Comparisons: {iteAndTime.iteration}</b></p>
         <p><b>Time: {Math.round(iteAndTime.time)} S</b></p>
       </div>
     {
